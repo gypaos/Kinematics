@@ -40,6 +40,7 @@ class TDisplayBrho : public TObject
       Bool_t   fVerbose;            //
       Bool_t   fDrawUncertainty;
       Bool_t   fDrawLevelNumber;
+      Bool_t   fIsEnergy;
 
    protected:
       Bool_t   CheckExistingHistogram();
@@ -65,6 +66,7 @@ class TDisplayBrho : public TObject
       void     SetVerbose(Bool_t verbose)       {fVerbose = verbose;}
       void     SetDrawUncertainty(Bool_t error) {fDrawUncertainty = error;}
       void     SetDrawLevelNumber(Bool_t levnb) {fDrawLevelNumber = levnb;}
+      void     SetIsEnergy(Bool_t nener)        {fIsEnergy = nener;}
 
       // getters
       TTarget* GetTarget()       const          {return fTarget;}

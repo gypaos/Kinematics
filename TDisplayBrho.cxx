@@ -20,7 +20,7 @@
 #include <iostream>
 using namespace std;
 
-//#define DEBUG
+#define DEBUG
 
 ClassImp(TDisplayBrho)
 
@@ -42,7 +42,8 @@ TDisplayBrho::TDisplayBrho()
      fBox(new TBox()),
      fVerbose(0),
      fDrawUncertainty(0),
-     fDrawLevelNumber(1)
+     fDrawLevelNumber(1),
+     fIsEnergy(1)
 {
    SetLineColor(kGreen);
 }
@@ -146,16 +147,27 @@ void TDisplayBrho::Calculate(Int_t level, Bool_t flag)
 // if flag = 0 (default), calculate brho for the energy level
 // if flag = 1, make the calculation for the uncertainty
 {     
-   // set excitation energy
-   Double_t energy   = fEnsdf->GetLevelEnergy(level);
-   if (flag) energy += fEnsdf->GetLevelEnergyUncertainty(level);
-   fTarget->GetReaction()->SetExcitationHeavy(energy);
+   if (fIsEnergy) {
+      // set excitation energy
+      Double_t energy   = fEnsdf->GetLevelEnergy(level);
+      if (flag) energy += fEnsdf->GetLevelEnergyUncertainty(level);
+      fTarget->GetReaction()->SetExcitationHeavy(energy);
 
-   // print infos
-   if (fVerbose) cout << "(" << level << ")\tEx = " << energy << " MeV\t\t";
+      // print infos
+      if (fVerbose) cout << "(" << level << ")\tEx = " << energy << " MeV\t\t";
 
-   // calculate brho
-   Calculate();
+      // calculate brho
+      Calculate();
+   }
+   else {
+      fBrho = fEnsdf->GetLevelEnergy(level);
+
+   #ifdef DEBUG
+      cout << "Calculate()" << endl;
+      cout << "brho:\t" << fBrho << endl;
+      cout << endl;
+   #endif
+   }
 }
 
 

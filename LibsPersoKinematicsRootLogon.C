@@ -35,7 +35,7 @@ void LibsPersoKinematicsRootLogon(bool verbosemode = false)
 {
    TString currentpath = gSystem->Getenv("PWD");
    TString path = gSystem->Getenv("LIBSPERSO");
-   path += "/kinematics";
+   path += "/Kinematics";
    
    // Add include path
    if (verbosemode) cout << "LibsPerso: adding include path : " << path << endl;
@@ -55,6 +55,7 @@ void LibsPersoKinematicsRootLogon(bool verbosemode = false)
    if (listfile->GetEntries() > 2) {
          gSystem->Load(libpath+"/libRal.so");
          gSystem->Load(libpath+"/libKinematics.so");
+         gSystem->Load(libpath+"/libTarget.so");
    }
     
    // Loop on all libraries
@@ -62,7 +63,8 @@ void LibsPersoKinematicsRootLogon(bool verbosemode = false)
    while (listfile->At(i)) {
       TString libname = listfile->At(i++)->GetName();
       if (libname.Contains(".so") && !libname.Contains("libKinematics.so")
-                                  && !libname.Contains("libRal.so")) {
+                                  && !libname.Contains("libRal.so")
+                                  && !libname.Contains("libTarget.so")) {
          TString lib     = libpath + "/" + libname;
          gSystem->Load(lib);
       }

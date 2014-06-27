@@ -125,6 +125,9 @@ class TReaction : public TObject {
    Double_t Rutherford() const;
    Double_t Rutherford(Double_t theta1, Double_t theta2) const;
    Double_t LimitingAngle() const;
+   Double_t WaveVector(UInt_t channel = 0) const;  // k in fm^-1
+   Double_t QTransfered() const;
+   Double_t LMatching() const;
 
    bool     IsValid() const {return isValid;}
    void		Dump() const;

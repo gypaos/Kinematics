@@ -18,8 +18,14 @@ TNoyau::TNoyau()
      fExcitationEnergy(0),
      fDemiVie("unknown"),
      fSpin(0),
-     fParite("unknown")
-
+     fParite("unknown"),
+     fEnergy(0),
+     fMomentum(0),
+     fWaveVector(0),
+     fBeta(0),
+     fGamma(0),
+     fBrho(0),
+     fTimeOfFlight(0)
 {
    //----------- Constructeur par defaut ----------
    // initialize chart
@@ -259,6 +265,20 @@ void TNoyau::EnergyToBrho()
 void TNoyau::EnergyToMomentum()
 {
    fMomentum = sqrt(pow(fEnergy,2) + 2*fEnergy*Mass());
+}
+
+
+
+void TNoyau::MomentumToWaveVector()
+{
+   fWaveVector = fMomentum / hbarc;
+}
+
+
+
+void TNoyau::BetaToGamma()
+{
+   fGamma = 1 / sqrt(1 - pow(fBeta, 2));
 }
 
 

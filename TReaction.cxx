@@ -9,6 +9,7 @@ using namespace std;
 #include "TMath.h"
 #include "TReaction.h"
 #include "TString.h"
+#include "TVector2.h"
 
 #include "Constant.h"
 
@@ -791,6 +792,42 @@ Double_t TReaction::LimitingAngle() const
    return ThetaMax;
 }
 
+
+
+Double_t TReaction::WaveVector(UInt_t channel) const
+{
+   // entrance channel
+   Double_t mu = fMass1*fMass2 / (fMass1 + fMass2);
+   Double_t TdispCM = fMass2 / (fMass1 + fMass2) * fBeamEnergy;
+
+
+   if (channel) {   // exit channel
+      mu = fMass3*fMass4 / (fMass3 + fMass4);
+      TdispCM = TdispCM + fQValue - fExcitationLight - fExcitationHeavy;
+   }
+
+   return sqrt(pow(TdispCM,2) + 2*TdispCM*mu) / hbarc;
+}
+
+
+
+Double_t TReaction::QTransfered() const
+{
+   TVector2 ki(WaveVector(), 0);
+   TVector2 kf;
+   kf.SetMagPhi(WaveVector(1), fThetaCM);
+
+   TVector2 qtr = kf - ki;
+
+   return qtr.Mod();
+}
+
+
+
+Double_t TReaction::LMatching() const
+{
+   return QTransfered() * 1.25*(pow(fNoy1->GetA(), 1./3.) + pow(fNoy2->GetA(), 1./3.));
+}
 
 
 

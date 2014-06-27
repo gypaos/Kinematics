@@ -23,6 +23,7 @@ class TNoyau : public TObject {
    // knematic properties
    Double_t fEnergy;             // in MeV
    Double_t fMomentum;           // in MeV/c
+   Double_t fWaveVector;         // in fm^-1 (k)
    Double_t fBeta;
    Double_t fGamma;
    Double_t fBrho;               // in T.m.
@@ -34,11 +35,14 @@ class TNoyau : public TObject {
  protected:
    void        EnergyToBrho();
    void        EnergyToMomentum();
+   void        EnergyToWaveVector() {EnergyToMomentum(); MomentumToWaveVector();}
    void        EnergyToTof();
    void        BrhoToEnergy();
    void        BrhoToTof()    {BrhoToEnergy(); EnergyToTof();}
    void        TofToEnergy();
    void        TofToBrho()    {TofToEnergy(); EnergyToBrho();}
+   void        MomentumToWaveVector();
+   void        BetaToGamma();
 
  public:
    TNoyau();
@@ -46,18 +50,21 @@ class TNoyau : public TObject {
    TNoyau(const char* name);
    virtual ~TNoyau();
    
-   const char  *GetNom() const { return fNom.Data(); }
-   Int_t        GetA() const { return fMasse; }
-   Int_t        GetZ() const { return fCharge; }
-   Double_t 	GetExcesMasse() const { return fExcesMasse; }
-   Double_t 	GetExcitationEnergy() const { return fExcitationEnergy; }
-   const char  *GetDemiVie() const { return fDemiVie.Data(); }
-   Double_t     GetSpin() const { return fSpin; }
-   const char  *GetParite() const { return fParite.Data(); }
-   Double_t    GetEnergy()       const {return fEnergy;}
-   Double_t    GetMomentum()       const {return fMomentum;}
-   Double_t    GetBrho()         const {return fBrho;}
-   Double_t    GetTimeOfFlight() const {return fTimeOfFlight;}
+   const char  *GetNom()               const {return fNom.Data(); }
+   Int_t        GetA()                 const {return fMasse; }
+   Int_t        GetZ()                 const {return fCharge; }
+   Double_t 	 GetExcesMasse()        const {return fExcesMasse; }
+   Double_t 	 GetExcitationEnergy()  const {return fExcitationEnergy; }
+   const char  *GetDemiVie()           const {return fDemiVie.Data(); }
+   Double_t     GetSpin()              const {return fSpin; }
+   const char  *GetParite()            const {return fParite.Data(); }
+   Double_t     GetEnergy()            const {return fEnergy;}
+   Double_t     GetMomentum()          const {return fMomentum;}
+   Double_t     GetWaveVector()        const {return fWaveVector;}
+   Double_t     GetBeta()              const {return fBeta;}
+   Double_t     GetGamma()             const {return fGamma;}
+   Double_t     GetBrho()              const {return fBrho;}
+   Double_t     GetTimeOfFlight()      const {return fTimeOfFlight;}
    void         SetNom(const char *name) { fNom = name; }
    void         SetA(Int_t A) { fMasse = A; }
    void         SetZ(Int_t Z) { fCharge = Z; }
@@ -66,20 +73,19 @@ class TNoyau : public TObject {
    void         SetDemiVie(char *vie) { fDemiVie = vie; }
    void         SetSpin(Double_t spin) { fSpin = spin; }
    void         SetParite(char *parite) { fParite = parite; }
-   void        SetEnergy(Double_t energy)    {fEnergy       = energy; EnergyToBrho(); EnergyToMomentum(); //EnergyToTof();
-   }
-   void        SetBrho(Double_t brho)        {fBrho         = brho;  BrhoToEnergy(); EnergyToMomentum();}
-   void        SetTimeOfFlight(Double_t tof) {fTimeOfFlight = tof;}
+   void         SetEnergy(Double_t energy)    {fEnergy       = energy; EnergyToBrho(); EnergyToWaveVector();} //EnergyToTof();}
+   void         SetBrho(Double_t brho)        {fBrho         = brho;  BrhoToEnergy(); EnergyToWaveVector();}
+   void         SetTimeOfFlight(Double_t tof) {fTimeOfFlight = tof;}
    
-   bool		IsKnown(Int_t charge, Int_t mass) const;
-   Int_t	FirstKnown(Int_t charge) const;
-   Int_t	LastKnown(Int_t charge) const;
-   bool		IsStable() const;
-   void		Extract(char *line);
-   Double_t	Mass() const;
+   bool		    IsKnown(Int_t charge, Int_t mass) const;
+   Int_t	       FirstKnown(Int_t charge) const;
+   Int_t	       LastKnown(Int_t charge) const;
+   bool		    IsStable() const;
+   void		    Extract(char *line);
+   Double_t	    Mass() const;
 
-   void		Print() const;
-   void     Print(Option_t*) const {};
+   void		    Print() const;
+   void         Print(Option_t*) const {};
    
    ClassDef(TNoyau,1)    // Une Classe TNoyau
 };

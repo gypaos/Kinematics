@@ -213,6 +213,7 @@ void TReaction::Initialize()
    fLabGamma3     = -1;
    fBrho3         = -1;
    fTimeOfFlight3 = -1;
+
    // Particle 4
    fLabAngle4     = -1;
    fLabEnergy4    = -1;
@@ -595,16 +596,30 @@ void TReaction::RelativisticLabKinematics()
 
    // calculate masses
    Double_t m1 = fMass1;
-//   Double_t m2 = fMass2;
+   Double_t m2 = fMass2;
    Double_t m3 = fMass3 + fExcitationLight;
    Double_t m4 = fMass4 + fExcitationHeavy;
+  
    // Q-value
    Double_t QValue = fQValue - fExcitationLight - fExcitationHeavy;
 
+   // available energy in the c.m.
+   Double_t WtotLab = (fNoy1->GetEnergie() + m1) + m2;
+   Double_t P1 = sqrt(pow(fNoy1->GetEnergie(),2) + 2*m1*fNoy1->GetEnergie());
+   Double_t B = P1 / WtotLab;
+   Double_t G = 1 / sqrt(1 - pow(B,2));
+ 
    // case of light ejectile (index 3)
    // angle
    fLabAngle3 = fThetaLab;
-
+   // total ejectile energy in the c.m.
+   Double_t W3cm = (pow(WtotLab,2) + pow(G,2)*(pow(m3,2) - pow(m4,2)))
+                   / (2 * G * WtotLab);
+   // ejectile velocity in the c.m.
+   Double_t beta3cm  = sqrt(1 - pow(m3,2)/pow(W3cm,2));
+   // constantes du mouvement
+   Double_t K3 = B / beta3cm;
+  
    // energy
    Double_t P12 = 2*m1*fBeamEnergy + pow(fBeamEnergy,2);
    Double_t A3 = pow(QValue,2) + 2*QValue*(m4+fBeamEnergy) + 2*fBeamEnergy*(m4-m1);
@@ -635,7 +650,15 @@ void TReaction::RelativisticLabKinematics()
    // brhos and tof
    RelativisticBrho();
    RelativisticTimeOfFlight();
+
+   // Jacobian
+   Double_t K3prim = B / fLabBeta3;
+   fThetaCM = atan(sin(fLabAngle3) / (G * (cos(fLabAngle3) - K3prim)));
+   if (fThetaCM < 0) fThetaCM += TMath::Pi();
+   fJacobian = G * (1 + K3*cos(fThetaCM)) / pow(pow(G*(K3+cos(fThetaCM)), 2) + pow(sin(fThetaCM), 2), 1.5); 
 }
+
+
 
 
 

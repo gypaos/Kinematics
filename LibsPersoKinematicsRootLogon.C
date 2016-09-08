@@ -56,6 +56,7 @@ void LibsPersoKinematicsRootLogon(bool verbosemode = false)
          gSystem->Load(libpath+"/libRal.so");
          gSystem->Load(libpath+"/libKinematics.so");
          gSystem->Load(libpath+"/libTarget.so");
+         gSystem->Load(libpath+"/libEnsdf.so");
    }
     
    // Loop on all libraries
@@ -64,6 +65,7 @@ void LibsPersoKinematicsRootLogon(bool verbosemode = false)
       TString libname = listfile->At(i++)->GetName();
       if (libname.Contains(".so") && !libname.Contains("libKinematics.so")
                                   && !libname.Contains("libRal.so")
+                                  && !libname.Contains("libEnsdf.so")
                                   && !libname.Contains("libTarget.so")) {
          TString lib     = libpath + "/" + libname;
          gSystem->Load(lib);

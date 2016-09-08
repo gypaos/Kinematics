@@ -95,7 +95,7 @@ class TReaction : public TObject {
    Double_t GetLabGamma4() const			         {return fLabGamma4;}
    Double_t GetJacobian() const                 {return fJacobian;}
    TString  GetReactionName();
-   
+
   protected:
    vector<Double_t>  QuadraticSolver(Double_t a, Double_t b, Double_t c) const;
 

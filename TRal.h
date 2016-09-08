@@ -33,7 +33,7 @@ class TRal : public TObject {
    void         Print() const;
    void         Print(Option_t*) const {};
    void         Draw() const;
-   void         Draw(Option_t* option = "") {};
+   void         Draw(Option_t* option = "") {if (option) {};};
 
    ClassDef(TRal,1)   // Une Classe TRal
 };

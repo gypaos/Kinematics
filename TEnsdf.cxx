@@ -9,9 +9,12 @@
 #include "TEnsdf.h"
 #include "TMath.h"
 #include "TPRegexp.h"
+#include "TSystem.h"
 
+#include <fstream>
 #include <sstream>
 #include <algorithm>
+#include <iomanip>
 using namespace std;
 
 //#define DEBUG
@@ -27,9 +30,11 @@ TEnsdf::TEnsdf()
 
 
 
+//TEnsdf::TEnsdf(const char* fileName, const char* option)
 TEnsdf::TEnsdf(const char* fileName)
    : fFileName(fileName)
 {
+//   if (option == "R") ReadEnsdfFile();
    ReadEnsdfFile();
 }
 
@@ -180,4 +185,24 @@ void TEnsdf::PrintLevels()
    for (UInt_t i = 0; i < fLevelEnergy.size(); ++i) {   // loop on levels
       cout << i << "\t" << fLevelEnergy[i] << endl;
    } // end loop on levels
+}
+
+
+
+void TEnsdf::WriteEnsdfFile(vector<Double_t> levels, vector<Int_t> uncertainty)
+{
+   // open file
+   TString path = gSystem->Getenv("DATANUC");
+   ofstream ensdf(Form("%s/Ensdf/AR_%s.ens", path.Data(), fFileName.Data()));
+
+   // loop on levels and write
+   for (UInt_t i = 0; i < levels.size(); ++i) {   // loop on levels
+      ensdf << left
+         << setw(5) << " 27AL"
+         << setw(4) << "  L "
+         << setw(10) << fixed << setprecision(1) << levels[i]
+         << setw(2) << fixed << setprecision(2) << uncertainty[i] << endl;
+   } // end loop on levels
+   // close file
+   ensdf.close();
 }

@@ -66,6 +66,7 @@ void TTarget::Clear()
    fLayerEnergyLoss.clear();          // energy loss in MeV
    fLayerEnergyEnd.clear();           // energy in MeV at end of layer
    fLayerBrhoEnd.clear();             // brho in T.m. at end of layer
+   fInteractingLayerName.clear();     // name of interacting layers
    fEnergyBeforeReaction     = 0;     // in MeV
    fEnergyAfterReaction      = 0;     // in MeV
    fEnergyLossBeforeReaction = 0;     // in keV
@@ -210,6 +211,7 @@ Int_t TTarget::EnergyLoss()
       fLayerEnergyLoss.push_back(eloss*1e3);
       fLayerEnergyEnd.push_back(energy);
       fLayerBrhoEnd.push_back(EnergyToBrho(fIncidentIon, energy));
+      fInteractingLayerName.push_back(fLayerName[i]);
    } // end loop on layers before interacting layers
 
    // energy loss in interacting layer
@@ -228,23 +230,50 @@ Int_t TTarget::EnergyLoss()
       energy = fReaction->GetLabEnergy3();
       fEnergyAfterReaction = energy;
 
-      // energy loss in interacting layer
-      pathAfter = (1-fInteractionPosition)*fLayerNominalThickness[fInteractionLayer]*1e-3 / TMath::Cos(reactionAngle - fTargetAngle*TMath::Pi()/180);
-      eloss   = fEnergyLossEmittedIon[fInteractionLayer]->Slow(energy, pathAfter);
-      energy -= eloss;
-      fEnergyLossAfterReaction = eloss*1e3;
-      fLayerEnergyLoss.push_back(fEnergyLossBeforeReaction + fEnergyLossAfterReaction);
-      fLayerEnergyEnd.push_back(energy);
-      fLayerBrhoEnd.push_back(EnergyToBrho(fEmittedIon, energy));
-
-      for (UShort_t i = fInteractionLayer+1; i < fLayerName.size(); ++i) {   // loop on layers after interacting layer
-         pathAfter = fLayerNominalThickness[i]*1e-3 / TMath::Cos(reactionAngle - fTargetAngle*TMath::Pi()/180);
-         eloss     = fEnergyLossEmittedIon[i]->Slow(energy, pathAfter);
-         energy   -= eloss;
-         fLayerEnergyLoss.push_back(eloss*1e3);
+      if (reactionAngle < TMath::Pi()/2) { // transmission case (i.e. magnetic spectro)
+         // energy loss in interacting layer after reaction
+         pathAfter = (1-fInteractionPosition)*fLayerNominalThickness[fInteractionLayer]*1e-3 / TMath::Cos(reactionAngle - fTargetAngle*TMath::Pi()/180);
+         eloss   = fEnergyLossEmittedIon[fInteractionLayer]->Slow(energy, pathAfter);
+         energy -= eloss;
+         fEnergyLossAfterReaction = eloss*1e3;
+         fLayerEnergyLoss.push_back(fEnergyLossBeforeReaction + fEnergyLossAfterReaction);
          fLayerEnergyEnd.push_back(energy);
          fLayerBrhoEnd.push_back(EnergyToBrho(fEmittedIon, energy));
-      } // end loop on layers after interacting layer
+         fInteractingLayerName.push_back(fLayerName[fInteractionLayer]);
+
+         for (UShort_t i = fInteractionLayer+1; i < fLayerName.size(); ++i) {   // loop on layers after interacting layer
+            pathAfter = fLayerNominalThickness[i]*1e-3 / TMath::Cos(reactionAngle - fTargetAngle*TMath::Pi()/180);
+            eloss     = fEnergyLossEmittedIon[i]->Slow(energy, pathAfter);
+            energy   -= eloss;
+            fLayerEnergyLoss.push_back(eloss*1e3);
+            fLayerEnergyEnd.push_back(energy);
+            fLayerBrhoEnd.push_back(EnergyToBrho(fEmittedIon, energy));
+            fInteractingLayerName.push_back(fLayerName[i]);
+         } // end loop on layers after interacting layer
+      }
+      else { // backward case (i.e. RBS)
+         // energy loss in interacting layer after reaction
+         pathAfter = fInteractionPosition*fLayerNominalThickness[fInteractionLayer]*1e-3 / TMath::Abs(TMath::Cos(reactionAngle - fTargetAngle*TMath::Pi()/180));
+         eloss   = fEnergyLossEmittedIon[fInteractionLayer]->Slow(energy, pathAfter);
+         energy -= eloss;
+         fEnergyLossAfterReaction = eloss*1e3;
+         fLayerEnergyLoss.push_back(fEnergyLossBeforeReaction + fEnergyLossAfterReaction);
+         fLayerEnergyEnd.push_back(energy);
+         fLayerBrhoEnd.push_back(EnergyToBrho(fEmittedIon, energy));
+         fInteractingLayerName.push_back(fLayerName[fInteractionLayer]);
+
+         if (fInteractionLayer > 0) { // case where interaction layer is not first layer
+            for (Short_t i = fInteractionLayer-1; i > -1; i--) {   // loop on layers after interacting layer
+               pathAfter = fLayerNominalThickness[i]*1e-3 / TMath::Abs(TMath::Cos(reactionAngle - fTargetAngle*TMath::Pi()/180));
+               eloss     = fEnergyLossEmittedIon[i]->Slow(energy, pathAfter);
+               energy   -= eloss;
+               fLayerEnergyLoss.push_back(eloss*1e3);
+               fLayerEnergyEnd.push_back(energy);
+               fLayerBrhoEnd.push_back(EnergyToBrho(fEmittedIon, energy));
+               fInteractingLayerName.push_back(fLayerName[i]);
+            } // end loop on layers after interacting layer
+         }
+      }
 
       // set beam energy to initial value for next calculation
       fReaction->SetBeamEnergy(fEnergyIon);
@@ -253,6 +282,7 @@ Int_t TTarget::EnergyLoss()
       fLayerEnergyLoss.push_back(eloss*1e3);
       fLayerEnergyEnd.push_back(energy);
       fLayerBrhoEnd.push_back(EnergyToBrho(fIncidentIon, energy));
+      fInteractingLayerName.push_back(fLayerName[fInteractionLayer]);
    }
 
    return 1;
@@ -260,6 +290,7 @@ Int_t TTarget::EnergyLoss()
 
 
 
+// only work in transmission mode
 Double_t TTarget::BrhoAtInteractionPosition(Double_t brho) const
 {
    Double_t brhoAtInteractionPosition = 0;
@@ -351,9 +382,9 @@ void TTarget::PrintEnergies() const
    if (!fReaction) cout << "Incident ion: " << fIncidentIon << endl;
    cout << "Incident energy: " << energy << " MeV" << endl;
 
-   for (UShort_t i = 0; i < fLayerName.size(); ++i) {   // loop on layers
+   for (UShort_t i = 0; i < fInteractingLayerName.size(); ++i) {   // loop on layers
       if (fInteractionLayer == i) {
-         cout << "\t" << fLayerName[i];
+         cout << "\t" << fInteractingLayerName[i];
          cout << "\t"   << fEnergyLossBeforeReaction << " keV\t\t" << fEnergyBeforeReaction << "\t" << "MeV" 
               << "\t\t" << EnergyToBrho(fIncidentIon, fEnergyBeforeReaction) << " T.m." << endl;
          if (fReaction) {
@@ -364,7 +395,7 @@ void TTarget::PrintEnergies() const
          }
       }
       else {
-         cout << "\t" << fLayerName[i] 
+         cout << "\t" << fInteractingLayerName[i] 
               << "\t" << fLayerEnergyLoss[i] << " keV\t\t" << fLayerEnergyEnd[i] << "\t" << "MeV"
               << "\t\t" << fLayerBrhoEnd[i] << " T.m." << endl;
       }

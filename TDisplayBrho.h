@@ -16,8 +16,19 @@
 #include "TBox.h"
 
 // perso headers
+#ifndef __TTARGET__ 
 #include "TTarget.h"
+#endif
+
+#ifndef __TENSDF__ 
 #include "TEnsdf.h"
+#endif
+
+//class TTarget;
+//class TEnsdf;
+
+#include <iostream>
+using namespace std;
 
 
 class TDisplayBrho : public TObject

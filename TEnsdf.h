@@ -17,7 +17,7 @@
 
 // c++ headers
 #include <iostream>
-#include <fstream>
+#include <vector>
 using namespace std;
 
 
@@ -30,6 +30,7 @@ class TEnsdf : public TObject
 
    public:
       TEnsdf();
+//      TEnsdf(const char* isotope, const char* option = "R");
       TEnsdf(const char* isotope);
       virtual ~TEnsdf();
 
@@ -44,6 +45,7 @@ class TEnsdf : public TObject
 
       // other methods to access raw information
       void              ReadEnsdfFile();
+      void              WriteEnsdfFile(vector<Double_t> levels, vector<Int_t> uncertainty);
       Double_t          GetLevelEnergy(Int_t i)             {return fLevelEnergy.at(i);}
       Double_t          GetLevelEnergyUncertainty(Int_t i)  {return fLevelEnergyUncertainty.at(i);}
 

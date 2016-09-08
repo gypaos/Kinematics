@@ -26,7 +26,8 @@ using namespace std;
 class TTarget : public TObject
 {
    private:
-      vector<TString>   fLayerName;                // list of name layers
+      vector<TString>   fLayerName;                // list of layer's name
+      vector<TString>   fInteractingLayerName;     // list of interacting layer's name
       vector<Double_t>  fLayerNominalThickness;    // in ug/cm2
       vector<Double_t>  fLayerEffectiveThickness;  // in ug/cm2
       vector<Double_t>  fLayerEnergyLoss;          // energy loss in MeV

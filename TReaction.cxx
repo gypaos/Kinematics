@@ -628,12 +628,14 @@ void TReaction::RelativisticLabKinematics()
    Double_t b3 = -2*A3*B3 - 2*m3*4*P12*pow(cos(fLabAngle3), 2);
    Double_t c3 = pow(A3,2);
    vector<Double_t> energy = QuadraticSolver(a3, b3, c3);
-   for (UInt_t i = 0; i < energy.size(); ++i) {   // loop on energy solutions
+   fLabEnergy3 = (fLabAngle3 < TMath::Pi()/2) ? energy[1] : energy[0];
+/*   for (UInt_t i = 0; i < energy.size(); ++i) {   // loop on energy solutions
+      cout << energy.at(i) << endl;
       if (energy.at(i) > 0) {
          fLabEnergy3 = energy.at(i);
       }
    } // end loop on energy solutions
-
+*/
    // case of beam-like ejectile (index 4)
    // angle
 

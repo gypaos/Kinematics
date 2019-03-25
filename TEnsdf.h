@@ -7,9 +7,9 @@
 // N. de Sereville (June 2011)                                //
 ////////////////////////////////////////////////////////////////
 #ifndef __TENSDF__
-#define __TENSDF_
+#define __TENSDF__
 
-// ROOT headers_
+// ROOT headers
 #include "TObject.h"
 #include "TString.h"
 #include "TGraph.h"

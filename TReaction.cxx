@@ -628,7 +628,11 @@ void TReaction::RelativisticLabKinematics()
    Double_t b3 = -2*A3*B3 - 2*m3*4*P12*pow(cos(fLabAngle3), 2);
    Double_t c3 = pow(A3,2);
    vector<Double_t> energy = QuadraticSolver(a3, b3, c3);
-   fLabEnergy3 = (fLabAngle3 < TMath::Pi()/2) ? energy[1] : energy[0];
+   // ensure that solution exists (e.g. enough energy available in the c.m.)
+   if (energy.size() > 0) {
+      fLabEnergy3 = (fLabAngle3 < TMath::Pi()/2) ? energy[1] : energy[0];
+   }
+//   cout << "  fLabEnergy3 = " << fLabEnergy3 << endl;
 /*   for (UInt_t i = 0; i < energy.size(); ++i) {   // loop on energy solutions
       cout << energy.at(i) << endl;
       if (energy.at(i) > 0) {
@@ -657,7 +661,7 @@ void TReaction::RelativisticLabKinematics()
    Double_t K3prim = B / fLabBeta3;
    fThetaCM = atan(sin(fLabAngle3) / (G * (cos(fLabAngle3) - K3prim)));
    if (fThetaCM < 0) fThetaCM += TMath::Pi();
-   fJacobian = G * (1 + K3*cos(fThetaCM)) / pow(pow(G*(K3+cos(fThetaCM)), 2) + pow(sin(fThetaCM), 2), 1.5); 
+   fJacobian = G * (1 + K3*cos(fThetaCM)) / pow(pow(G*(K3+cos(fThetaCM)), 2) + pow(sin(fThetaCM), 2), 1.5);
 }
 
 

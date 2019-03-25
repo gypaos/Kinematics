@@ -7,7 +7,7 @@
 // N. de Sereville (June 2011)                                //
 ////////////////////////////////////////////////////////////////
 #ifndef __TSPECTROPLOT__
-#define __TSPECTROPLOT_
+#define __TSPECTROPLOT__
 
 // ROOT headers_
 #include "TObject.h"

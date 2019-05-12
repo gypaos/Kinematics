@@ -9,7 +9,7 @@
 #ifndef __ENSDF__
 #define __ENSDF__
 
-// ROOT headers_
+// ROOT headers
 #include "TObject.h"
 #include "TString.h"
 #include "TGraph.h"

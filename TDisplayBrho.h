@@ -16,11 +16,11 @@
 #include "TBox.h"
 
 // perso headers
-#ifndef __TTARGET__ 
+#ifndef __TARGET__ 
 #include "TTarget.h"
 #endif
 
-#ifndef __TENSDF__ 
+#ifndef __ENSDF__ 
 #include "TEnsdf.h"
 #endif
 

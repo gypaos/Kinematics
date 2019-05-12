@@ -110,7 +110,7 @@ void TEnsdfPlot::DisplayEnsdfFile(UInt_t index)
    vector<Double_t> ExcitationEnergy = fEnsdfList[index]->GetLevelEnergyList();
    for (UInt_t i = 0; i < ExcitationEnergy.size(); ++i) {   // loop on excited states
       // get energy
-      Double_t energy = ExcitationEnergy[i];
+      Double_t energy = ExcitationEnergy[i] + fOffsetLevels[index]/1000;
       Double_t posEnergy = (fBoxX2 - fBoxX1)/(fEnergyMax - fEnergyMin)*(energy - fEnergyMin) + fBoxX1;
       // if level in focal plane, then draw
       if (energy > fEnergyMin  &&  energy < fEnergyMax) {

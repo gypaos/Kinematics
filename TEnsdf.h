@@ -6,8 +6,8 @@
 //                                                            //
 // N. de Sereville (June 2011)                                //
 ////////////////////////////////////////////////////////////////
-#ifndef __TENSDF__
-#define __TENSDF_
+#ifndef __ENSDF__
+#define __ENSDF__
 
 // ROOT headers_
 #include "TObject.h"

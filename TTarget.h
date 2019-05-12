@@ -6,8 +6,8 @@
 //                                                               //
 // N. de Sereville (September 2011)                              //
 ///////////////////////////////////////////////////////////////////
-#ifndef __TTARGET__
-#define __TTARGET_
+#ifndef __TARGET__
+#define __TARGET__
 
 // ROOT headers_
 #include "TObject.h"

@@ -6,8 +6,8 @@
 //                                                            //
 // N. de Sereville (June 2011)                                //
 ////////////////////////////////////////////////////////////////
-#ifndef __TSPECTROPLOT__
-#define __TSPECTROPLOT_
+#ifndef __SPECTROPLOT__
+#define __SPECTROPLOT__
 
 // ROOT headers_
 #include "TObject.h"
@@ -26,6 +26,7 @@ class TSpectroPlot : public TObject
    private:
       vector<TReaction*>      fReactionList;
       vector<TEnsdf*>         fEnsdfList;
+      Int_t                   fRefReaction;
       Double_t                fBeamEnergy;      // in MeV
       Double_t                fLabAngle;        // in degrees
       Double_t                fMagneticField;   // in Tesla
@@ -42,8 +43,9 @@ class TSpectroPlot : public TObject
       TSpectroPlot();
       virtual ~TSpectroPlot();
 
-      void SetBeamEnergy(Double_t energy);
-      void SetLaboratoryAngle(Double_t angle);
+      void SetBeamEnergy(Double_t);
+      void SetLaboratoryAngle(Double_t);
+      void SetRefReaction(Int_t reaction)       {fRefReaction   = reaction;}
       void SetMagneticField(Double_t field)     {fMagneticField = field;}
       void SetRhoMin(Double_t rmin)             {fRhoMin        = rmin;}
       void SetRhoMax(Double_t rmax)             {fRhoMax        = rmax;}
@@ -51,6 +53,7 @@ class TSpectroPlot : public TObject
 
       Double_t GetLaboratoryAngle()    const    {return fLabAngle;}
       Double_t GetBeamEnergy()         const    {return fBeamEnergy;}
+      Double_t GetMagneticField()      const    {return fMagneticField;}
       UInt_t   GetNumberOfReactions()  const    {return fReactionList.size();}
 
       void     AddReaction(TReaction* reaction);
@@ -58,6 +61,7 @@ class TSpectroPlot : public TObject
       void     Display();
       void     DisplayReaction(UInt_t index);
       void     DisplayKinematicFactor(UInt_t index);
+      void     SetRefExcitationEnergy(Double_t);
 
       ClassDef(TSpectroPlot,1);
 };

@@ -3,6 +3,7 @@
 
 #include "TObject.h"
 #include "TString.h"
+#include "TGraph.h"
 
 class TRal : public TObject {
  private :
@@ -22,6 +23,7 @@ class TRal : public TObject {
 
    const char	*GetUnit() const { return fUnit.Data(); }
    Int_t	GetDim() const { return fDim; }
+   TGraph*  GetEnergyLossGraph() const;
    Double_t	EvalDedxNuc(Double_t ener) const;
    Double_t	EvalDedxElec(Double_t ener) const;
    Double_t	EvalDedxTot(Double_t ener) const;

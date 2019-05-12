@@ -53,6 +53,7 @@ TRal::TRal(TString name)
    Int_t nlines = 0;
    while ( fich >> energie >> unit >> elec >> nuc >> range >> unit_range >> dum_n 
 	        >> dum_c >> dum_n >> dum_c ) {
+//      cout << energie << "\t" << elec << "\t" << nuc << "\n";
       if ( !unit.CompareTo("keV") ) fact = 1.e-3;
       if ( !unit.CompareTo("MeV") ) fact = 1.;
       if ( !unit.CompareTo("GeV") ) fact = 1.e+3;
@@ -104,6 +105,13 @@ void TRal::Draw() const
    s->Draw();
 //   s->Draw("same");
 }
+
+
+TGraph* TRal::GetEnergyLossGraph() const
+{
+   return (new TGraph(fDim, fEnergie, fDedx_Tot));
+}
+
 
 
 Double_t TRal::EvalDedxNuc(Double_t ener) const

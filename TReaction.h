@@ -128,6 +128,13 @@ class TReaction : public TObject {
    Double_t WaveVector(UInt_t channel = 0) const;  // k in fm^-1
    Double_t QTransfered() const;
    Double_t LMatching() const;
+   Double_t Eta(Double_t energy) const;
+   Double_t Mu() const;
+   Double_t Rho(Double_t energy) const;
+   Double_t Rho(Double_t energy, Double_t a) const;
+   Double_t Rn() const;
+   Double_t GrazingAngle() const;
+   Double_t GrazingAngularMomenta() const;
 
    bool     IsValid() const {return isValid;}
    void		Dump() const;

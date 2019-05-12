@@ -6,8 +6,8 @@
 //                                                            //
 // N. de Sereville (June 2011)                                //
 ////////////////////////////////////////////////////////////////
-#ifndef __TENSDFPLOT__
-#define __TENSDFPLOT_
+#ifndef __ENSDFPLOT__
+#define __ENSDFPLOT__
 
 // ROOT headers_
 #include "TObject.h"
@@ -46,7 +46,7 @@ class TEnsdfPlot : public TObject
 
 
       void     AddEnsdfFile(TEnsdf* ensdf, Double_t offset = 0);
-      void     AddEnsdfFile(const char* isotope, Double_t offset = 0);
+      void     AddEnsdfFile(const char* isotope, Double_t offset = 0, Double_t gain = 1);
       void     Display();
       void     DisplayEnsdfFile(UInt_t index);
 

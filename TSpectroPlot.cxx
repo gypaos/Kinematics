@@ -25,7 +25,8 @@ ClassImp(TSpectroPlot)
 
 
 TSpectroPlot::TSpectroPlot()
-   : fBeamEnergy(0),
+   : fRefReaction(0),
+     fBeamEnergy(0),
      fLabAngle(0),
      fMagneticField(0),
      fRhoMin(63),    // SP value
@@ -91,6 +92,18 @@ void TSpectroPlot::SetLaboratoryAngle(Double_t angle)
    } // end loop on reaction list
 }
 
+
+
+
+void TSpectroPlot::SetRefExcitationEnergy(Double_t excitationEnergy)
+{
+   // calculate magnetic field at the middle of FP for the reference reaction
+   fReactionList[fRefReaction]->SetExcitationHeavy(excitationEnergy);
+   fReactionList[fRefReaction]->RelativisticLabKinematics();
+   fReactionList[fRefReaction]->RelativisticBrho();
+   fMagneticField = fReactionList[fRefReaction]->GetBrho3();
+   fMagneticField *= 100 /(fRhoMin +2*(fRhoMax - fRhoMin)/3.);
+}
 
 
 

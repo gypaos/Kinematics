@@ -3,8 +3,8 @@ include ./Makefile.arch
 #------------------------------------------------------------------------------
 SHARELIB      = libRal.so libTarget.so \
                 libKinematics.so    libDisplayBrho.so \
-                libEnsdf.so         libEnsdfPlot.so \
-                libSpectroPlot.so
+                libEnsdf.so         libSpectroPlot.so \
+                libEnsdfPlot.so
 
 all:            $(SHARELIB)
 #------------------------------------------------------------------------------

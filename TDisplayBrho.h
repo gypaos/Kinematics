@@ -5,8 +5,8 @@
 //                                                            //
 // N. de Sereville (October 2012)                             //
 ////////////////////////////////////////////////////////////////
-#ifndef __TDISPLAYBRHO__
-#define __TDISPLAYBRHO_
+#ifndef __DISPLAYBRHO__
+#define __DISPLAYBRHO__
 
 // ROOT headers_
 #include "TObject.h"

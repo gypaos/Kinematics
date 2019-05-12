@@ -613,14 +613,17 @@ void TReaction::RelativisticLabKinematics()
    Double_t b3 = -2*A3*B3 - 2*m3*4*P12*pow(cos(fLabAngle3), 2);
    Double_t c3 = pow(A3,2);
    vector<Double_t> energy = QuadraticSolver(a3, b3, c3);
-   fLabEnergy3 = (fLabAngle3 < TMath::Pi()/2) ? energy[1] : energy[0];
-/*   for (UInt_t i = 0; i < energy.size(); ++i) {   // loop on energy solutions
-      cout << energy.at(i) << endl;
+//   fLabEnergy3 = (fLabAngle3 < TMath::Pi()/2) ? energy[1] : energy[0];
+//   if (fLabEnergy3 < 0) fLabEnergy3 = -1;
+//   cout << fLabEnergy3 << endl;
+   for (UInt_t i = 0; i < energy.size(); ++i) {   // loop on energy solutions
+//      cout << energy.at(i) << endl;
       if (energy.at(i) > 0) {
          fLabEnergy3 = energy.at(i);
+//         cout << fLabEnergy3 << endl;
       }
    } // end loop on energy solutions
-*/
+
    // case of beam-like ejectile (index 4)
    // angle
 
@@ -796,6 +799,51 @@ Double_t TReaction::LimitingAngle() const
 
 
 
+Double_t TReaction::Mu() const
+{
+   Double_t m1 = (Double_t)fNoy1->GetA() + fNoy1->GetExcesMasse() / uma / 1000;
+   Double_t m2 = (Double_t)fNoy2->GetA() + fNoy2->GetExcesMasse() / uma / 1000;
+   
+   return m1*m2 / (m1+m2);
+}
+
+
+
+Double_t TReaction::Rn() const
+{
+   return 1.4 * (TMath::Power(fNoy1->GetA(), 1./3.) + TMath::Power(fNoy2->GetA(), 1./3.));
+}
+
+
+
+Double_t TReaction::Rho(Double_t energy) const
+{
+   Double_t k = TMath::Sqrt(2 * Mu()*uma * energy / TMath::Power(hbarc,2));
+
+   return k*Rn();
+}
+
+
+
+Double_t TReaction::Rho(Double_t energy, Double_t a) const
+{
+   Double_t k = TMath::Sqrt(2 * Mu()*uma * energy / TMath::Power(hbarc,2));
+
+   return k*a;
+}
+
+
+
+Double_t TReaction::Eta(Double_t energy) const
+{
+   Double_t eta = 1./alpha * fNoy1->GetZ()*fNoy2->GetZ() *
+      TMath::Sqrt(Mu()*uma / 2 / energy);
+
+   return eta;
+}
+
+
+
 Double_t TReaction::WaveVector(UInt_t channel) const
 {
    // entrance channel
@@ -822,6 +870,43 @@ Double_t TReaction::QTransfered() const
    TVector2 qtr = kf - ki;
 
    return qtr.Mod();
+}
+
+
+
+Double_t TReaction::GrazingAngle() const
+{
+   Double_t TdispCM = (Double_t) fNoy2->GetA() / (fNoy1->GetA()+fNoy2->GetA()) * fNoy1->GetEnergie();
+
+   // A. Di Pietro (pptx; An experimental view of elastic and inelastic scattering: kinematics
+//   return 2 * asin(Eta(TdispCM) / (Rho(TdispCM) - Eta(TdispCM))) * 180 / M_PI;
+
+   return 2 * atan(Eta(TdispCM)/GrazingAngularMomenta()) * 180 / M_PI;
+}
+
+
+
+Double_t TReaction::GrazingAngularMomenta() const
+{
+   Double_t result = 0;
+
+   Double_t TdispCM = (Double_t) fNoy2->GetA() / (fNoy1->GetA()+fNoy2->GetA()) * fNoy1->GetEnergie();
+
+   Double_t a = 1;
+   Double_t b = 1;
+   Double_t c = -Rho(TdispCM) * (Rho(TdispCM) - 2*Eta(TdispCM));
+   vector<Double_t> L0 = QuadraticSolver(a, b, c);
+   // check if solutions exist
+   if (L0.size() > 0) {
+      for (UInt_t i = 0; i < L0.size(); ++i) {   // loop on energy solutions
+         cout << L0[i] <<  '\n';
+         if (L0.at(i) > 0) {
+            result = L0[i];
+         }
+      } // end loop on energy solutions
+   }
+
+   return result;
 }
 
 

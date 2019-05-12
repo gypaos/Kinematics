@@ -55,6 +55,7 @@ class TSpectroPlot : public TObject
       Double_t GetBeamEnergy()         const    {return fBeamEnergy;}
       Double_t GetMagneticField()      const    {return fMagneticField;}
       UInt_t   GetNumberOfReactions()  const    {return fReactionList.size();}
+      TReaction* GetRefReaction()      const    {return fReactionList[fRefReaction];}
 
       void     AddReaction(TReaction* reaction);
       void     AddReaction(const char*, const char*, const char*, const char*);

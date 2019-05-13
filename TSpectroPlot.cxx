@@ -102,7 +102,7 @@ void TSpectroPlot::SetRefExcitationEnergy(Double_t excitationEnergy)
    fReactionList[fRefReaction]->RelativisticLabKinematics();
    fReactionList[fRefReaction]->RelativisticBrho();
    fMagneticField = fReactionList[fRefReaction]->GetBrho3();
-   fMagneticField *= 100 /(fRhoMin +2*(fRhoMax - fRhoMin)/3.);
+   fMagneticField *= 100 /(fRhoMin + (fRhoMax - fRhoMin)/2.);
 }
 
 
@@ -208,8 +208,8 @@ void TSpectroPlot::DisplayReaction(UInt_t index)
 void TSpectroPlot::DisplayKinematicFactor(UInt_t index)
 {
    // calculate brho (T.m.) in middle of focal plane
-//   Double_t bRhoMid = fMagneticField * (fRhoMin+fRhoMax)/2 * 1e-2;
-   Double_t bRhoMid = fMagneticField * (fRhoMin + 1500./2500.*(fRhoMax-fRhoMin)) * 1e-2;
+   Double_t bRhoMid = fMagneticField * (fRhoMin+fRhoMax)/2 * 1e-2;
+//   Double_t bRhoMid = fMagneticField * (fRhoMin + 1500./2500.*(fRhoMax-fRhoMin)) * 1e-2;
 
    // calculate associated excitation energy
    Double_t exMid = fReactionList[index]->ReconstructExcitationRelatBrho(bRhoMid, TMath::Pi()/180*fLabAngle);

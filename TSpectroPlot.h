@@ -63,6 +63,7 @@ class TSpectroPlot : public TObject
       void     DisplayReaction(UInt_t index);
       void     DisplayKinematicFactor(UInt_t index);
       void     SetRefExcitationEnergy(Double_t);
+      void     DrawRegionOfInterest(Double_t, Double_t);
 
       ClassDef(TSpectroPlot,1);
 };

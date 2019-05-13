@@ -234,3 +234,36 @@ void TSpectroPlot::DisplayKinematicFactor(UInt_t index)
       texFP->Draw();
    }
 }
+
+
+void TSpectroPlot::DrawRegionOfInterest(Double_t exmin, Double_t exmax)
+{
+   // case for min excitation energy
+   fReactionList[fRefReaction]->SetExcitationHeavy(exmin);
+   fReactionList[fRefReaction]->RelativisticLabKinematics();
+   fReactionList[fRefReaction]->RelativisticBrho();
+   Double_t rhoMin = fReactionList[fRefReaction]->GetBrho3() / fMagneticField * 100;
+   Double_t posRhoMin = (fBoxX2 - fBoxX1) / (fRhoMax - fRhoMin)*(rhoMin - fRhoMin) + fBoxX1;
+
+
+   // draw line for min excitation energy
+   TLine *lineMin = new TLine(posRhoMin, fBoxY1, posRhoMin, fBoxY2);
+   lineMin->SetLineColor(kRed);
+   lineMin->SetLineWidth(2);
+   lineMin->SetLineStyle(3);
+   lineMin->Draw();
+
+   // case for max excitation energy
+   fReactionList[fRefReaction]->SetExcitationHeavy(exmax);
+   fReactionList[fRefReaction]->RelativisticLabKinematics();
+   fReactionList[fRefReaction]->RelativisticBrho();
+   Double_t rhoMax = fReactionList[fRefReaction]->GetBrho3() / fMagneticField * 100;
+   Double_t posRhoMax = (fBoxX2 - fBoxX1) / (fRhoMax - fRhoMin)*(rhoMax - fRhoMin) + fBoxX1;
+
+   // draw line for max excitation energy
+   TLine *lineMax = new TLine(posRhoMax, fBoxY1, posRhoMax, fBoxY2);
+   lineMax->SetLineColor(kRed);
+   lineMax->SetLineWidth(2);
+   lineMax->SetLineStyle(3);
+   lineMax->Draw();
+}

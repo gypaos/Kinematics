@@ -53,7 +53,7 @@ void TEnsdfPlot::AddEnsdfFile(TEnsdf* ensdf, Double_t offset)
 
 
 
-void TEnsdfPlot::AddEnsdfFile(const char* isotope, Double_t offset)
+void TEnsdfPlot::AddEnsdfFile(const char* isotope, Double_t offset, Double_t gain)
 {
    // add ensdf file
    TEnsdf *ensdf = new TEnsdf(isotope);

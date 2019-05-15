@@ -236,7 +236,7 @@ void TSpectroPlot::DisplayKinematicFactor(UInt_t index)
 }
 
 
-void TSpectroPlot::DrawRegionOfInterest(Double_t exmin, Double_t exmax)
+void TSpectroPlot::SetRegionOfInterest(Double_t exmin, Double_t exmax)
 {
    // case for min excitation energy
    fReactionList[fRefReaction]->SetExcitationHeavy(exmin);
@@ -266,4 +266,37 @@ void TSpectroPlot::DrawRegionOfInterest(Double_t exmin, Double_t exmax)
    lineMax->SetLineWidth(2);
    lineMax->SetLineStyle(3);
    lineMax->Draw();
+}
+
+
+
+void TSpectroPlot::SetLevelOfInterest(UInt_t index)
+{
+   // get excitation energy corresponding to index level for reaction of 
+   // interest
+   Double_t excitationEnergy = fEnsdfList[fRefReaction]->GetLevelEnergy(index); 
+
+   // kinematics calculation for the level of interest
+   fReactionList[fRefReaction]->SetExcitationHeavy(excitationEnergy);
+   fReactionList[fRefReaction]->RelativisticLabKinematics();
+   fReactionList[fRefReaction]->RelativisticBrho();
+   Double_t brho = fReactionList[fRefReaction]->GetBrho3();;
+
+   // position in the focal plane for the level of interest
+   Double_t rho = brho / fMagneticField;
+   rho *= 100; // in cm
+   Double_t posRho = (fBoxX2 - fBoxX1)/(fRhoMax - fRhoMin)*(rho - fRhoMin) + fBoxX1;
+   
+   // horizontal line and reaction name
+   Double_t height   = (fBoxY2-fBoxY1) / GetNumberOfReactions();
+   Double_t position = fBoxY2 - height*fRefReaction;;
+   
+   // if level in focal plane, then draw
+   if (rho > fRhoMin  &&  rho < fRhoMax) {
+      // draw level
+      TLine *lineLevel = new TLine(posRho, position, posRho, position - 0.5*height);
+      lineLevel->SetLineColor(kMagenta);
+      lineLevel->SetLineWidth(2);
+      lineLevel->Draw();
+   }
 }

@@ -12,6 +12,8 @@
 #include "TBeam.h"
 #endif
 
+#include <vector>
+
 //class TNoyau;
 //class TBeam;
 
@@ -97,7 +99,7 @@ class TReaction : public TObject {
    TString  GetReactionName();
 
   protected:
-   vector<Double_t>  QuadraticSolver(Double_t a, Double_t b, Double_t c) const;
+   std::vector<Double_t>  QuadraticSolver(Double_t a, Double_t b, Double_t c) const;
 
   public:
    // divers

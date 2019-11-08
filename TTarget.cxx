@@ -29,7 +29,8 @@ TTarget::TTarget()
      fEnergyBeforeReaction(0),
      fEnergyAfterReaction(0),
      fEnergyLossBeforeReaction(0),
-     fEnergyLossAfterReaction(0)
+     fEnergyLossAfterReaction(0),
+     fLightParticle(1)
 {
 }
 
@@ -46,7 +47,8 @@ TTarget::TTarget(TString name, Double_t thickness)
      fEnergyBeforeReaction(0),
      fEnergyAfterReaction(0),
      fEnergyLossBeforeReaction(0),
-     fEnergyLossAfterReaction(0)
+     fEnergyLossAfterReaction(0),
+     fLightParticle(1)
 {
    AddLayer(name, thickness);
 }
@@ -168,12 +170,18 @@ void TTarget::CalculateEffectiveThickness()
 
 
 
-void TTarget::SetReaction(TReaction *reac)
+void TTarget::SetReaction(TReaction *reac, Bool_t kLight)
 {
    fReaction = reac;
+   fLightParticle = kLight;
 
    SetIncidentIon(reac->GetNoy1()->GetNom(), reac->GetBeamEnergy());
-   SetEmittedIon( reac->GetNoy3()->GetNom());
+   if (fLightParticle) {
+      SetEmittedIon(reac->GetNoy3()->GetNom());
+   }
+   else {
+      SetEmittedIon(reac->GetNoy4()->GetNom());
+   }
 }
 
 
@@ -226,8 +234,11 @@ Int_t TTarget::EnergyLoss()
 
       // kinematics
       fReaction->SetBeamEnergy(energy);
-      fReaction->RelativisticLabKinematics();
+//      fReaction->RelativisticLabKinematics();
+      // for VAMOS at zero degree
+      fReaction->RelativisticKinematics();
       energy = fReaction->GetLabEnergy3();
+      if (!fLightParticle) energy = fReaction->GetLabEnergy4();
       fEnergyAfterReaction = energy;
 
       if (reactionAngle < TMath::Pi()/2) { // transmission case (i.e. magnetic spectro)

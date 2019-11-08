@@ -944,6 +944,26 @@ TString TReaction::GetReactionName()
 
 
 
+Double_t TReaction::CMEnergyToLabEnergyPerU(Double_t eres) const
+{
+   Double_t m1 = (Double_t)fNoy1->GetA() + fNoy1->GetExcesMasse() / uma / 1000;
+   Double_t m2 = (Double_t)fNoy2->GetA() + fNoy2->GetExcesMasse() / uma / 1000;
+   
+   return eres * (m1+m2)/m1/m2;
+}
+
+
+
+Double_t TReaction::LabEnergyPerUToCMEnergy(Double_t ener) const
+{
+   Double_t m1 = (Double_t)fNoy1->GetA() + fNoy1->GetExcesMasse() / uma / 1000;
+   Double_t m2 = (Double_t)fNoy2->GetA() + fNoy2->GetExcesMasse() / uma / 1000;
+   
+   return ener * m1*m2/(m1+m2);
+}
+
+
+
 vector<Double_t> TReaction::QuadraticSolver(Double_t a, Double_t b, Double_t c) const
 {
    // Function to solve ax^2 + bx + c = 0

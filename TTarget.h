@@ -46,6 +46,7 @@ class TTarget : public TObject
       Double_t          fEnergyAfterReaction;      // in MeV
       Double_t          fEnergyLossBeforeReaction; // in keV
       Double_t          fEnergyLossAfterReaction;  // in keV
+      Bool_t            fLightParticle; 
 
 
    protected:
@@ -79,7 +80,7 @@ class TTarget : public TObject
       }
       void  SetIncidentIon(TString ion)   {fIncidentIon = ion; BuildEnergyLossIncident();};
       void  SetEnergyIon(Double_t ener)   {fEnergyIon = ener;}
-      void  SetReaction(TReaction *reac);
+      void  SetReaction(TReaction *reac, Bool_t kLight = 1);
       void  SetEmittedIon(TString ion)    {fEmittedIon = ion; BuildEnergyLossEmitted();};
 
       // other methods

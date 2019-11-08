@@ -143,6 +143,10 @@ class TReaction : public TObject {
    void		Print() const;
    void     Print(Option_t*) const {};
    
+   // cm to lab conversions
+   Double_t CMEnergyToLabEnergyPerU(Double_t eres) const;
+   Double_t LabEnergyPerUToCMEnergy(Double_t ener) const;
+
    ClassDef(TReaction,1)     // Calculs de cinematique
 };
 
